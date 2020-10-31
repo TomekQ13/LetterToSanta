@@ -1,0 +1,4 @@
+.vscode
+.env
+Pipfile
+Pipfile.lock
