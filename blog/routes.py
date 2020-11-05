@@ -1,33 +1,20 @@
 import os
 import secrets
+
+from flask import flash, redirect, render_template, request, url_for, abort
+from flask_login import current_user, login_required, login_user, logout_user
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request
-from blog import app, db, bcrypt
-from blog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
-from blog.models import User, Post
-from flask_login import login_user, current_user, logout_user, login_required
 
-post = [
-    {
-        'author': 'Komsi Pomsi',
-        'title': 'KOCHAM JULSI',
-        'content': 'first post content',
-        'date_posted': 'April 20, 2020'
-    },
-    {
-        'author': 'Another Author',
-        'title': 'dummy post two',
-        'content': 'Second post content',
-        'date_posted': 'April 22, 2020'       
-    }
-
-]
+from blog import app, bcrypt, db
+from blog.forms import LoginForm, PostForm, RegistrationForm, UpdateAccountForm
+from blog.models import Post, User
 
 
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html', posts = post)
+    posts = Post.query.order_by(Post.date_posted.desc())
+    return render_template('home.html', posts = posts)
 
 @app.route("/about")
 def about():
@@ -128,8 +115,32 @@ def account():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
+              
+        post = Post(author = current_user, title=form.title.data, content=form.content.data)
+        db.session.add(post)
+        db.session.commit()
+
         flash('The post has been created','success')
         return redirect(url_for('home'))
 
-    return render_template('create_post.html', title='New Post', form=form)
+    return render_template('create_post.html', title='New Post', form=form, legend='New Post')
 
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    return render_template('post.html', title=post.title, post=post)
+
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def post_update(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    if post.author != current_user:
+        abort(403)
+
+    form = PostForm()
+    form.title.data = post.title
+    form.content.data = post.content
+
+    return render_template('create_post.html', title='Update Post', form=form, legend='Update Post')
