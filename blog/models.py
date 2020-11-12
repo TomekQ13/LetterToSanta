@@ -4,14 +4,16 @@ from blog import db, login_manager
 from flask import current_app
 from flask_login import UserMixin
 
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    active = db.Column(db.Boolean(), nullable=False, default=0)
     posts = db.relationship('Post', backref='author', lazy=True)
+    roles = db.relationship('UserRoles', backref='roles', lazy=True)
+    
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -44,7 +46,7 @@ class Post(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
+#we can now change this to a tables instead of a model 
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50), unique=True)
@@ -53,4 +55,5 @@ class UserRoles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
-
+    user = db.relationship('User', backref='user', lazy=True)
+    role = db.relationship('Role', backref='role', lazy=True)

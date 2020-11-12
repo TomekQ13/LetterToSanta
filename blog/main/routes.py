@@ -17,6 +17,7 @@ def about():
     return render_template('about.html', title = 'About')
 
 @main.route("/test")
-@roles_required('Admin')
 def test_page():
+    #if current_user.
+
     return render_template_string('''<h1> test page - authentication successful </h1>''')
