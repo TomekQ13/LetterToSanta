@@ -1,7 +1,9 @@
+from blog.users.utils import role_required
 from flask import render_template, request, Blueprint
 from flask.templating import render_template_string
-from flask_user import roles_required
-from blog.models import Post
+from flask_login import current_user
+from flask_login.utils import login_required
+from blog.models import Post, Role
 
 main = Blueprint('main', __name__)
 
@@ -16,8 +18,11 @@ def home():
 def about():
     return render_template('about.html', title = 'About')
 
-@main.route("/test")
-def test_page():
-    #if current_user.
 
-    return render_template_string('''<h1> test page - authentication successful </h1>''')
+@main.route("/test")
+@role_required('Admin')
+def test_page():
+    if Role.query.filter_by(name='Admin').first() in current_user.roles:
+        return render_template_string('''<h1> test page - authentication successful </h1>''')
+    else:
+        return render_template_string('''<h1> test page - authentication unsuccessful </h1>''')

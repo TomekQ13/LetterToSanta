@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     active = db.Column(db.Boolean(), nullable=False, default=0)
     posts = db.relationship('Post', backref='author', lazy=True)
-    roles = db.relationship('UserRoles', backref='roles', lazy=True)
+    roles = db.relationship('Role', secondary='user_roles',  backref=db.backref('user', lazy=True), lazy='subquery')
     
 
     def get_reset_token(self, expires_sec=1800):
@@ -46,14 +46,13 @@ class Post(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-#we can now change this to a tables instead of a model 
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50), unique=True)
 
 class UserRoles(db.Model):
+    __tablename__='user_roles'
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
-    user = db.relationship('User', backref='user', lazy=True)
-    role = db.relationship('Role', backref='role', lazy=True)
+
