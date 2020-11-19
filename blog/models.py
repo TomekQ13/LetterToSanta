@@ -13,7 +13,10 @@ class User(db.Model, UserMixin):
     active = db.Column(db.Boolean(), nullable=False, default=0)
     posts = db.relationship('Post', backref='author', lazy=True)
     roles = db.relationship('Role', secondary='user_roles',  backref=db.backref('user', lazy=True), lazy='subquery')
-    
+
+    @property
+    def roles_names(self):
+        return [role.name for role in User.query.get(self.id).roles]
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
