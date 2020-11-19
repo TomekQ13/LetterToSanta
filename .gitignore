@@ -5,3 +5,5 @@ site.db
 .jpg
 .png
 .helper_script.py
+SQLs
+restore_from_backup.sql
