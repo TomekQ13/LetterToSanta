@@ -1,7 +1,7 @@
 import os
 import secrets
 from PIL import Image
-from flask import url_for, current_app, request
+from flask import url_for, current_app, request, abort
 from flask_mail import Message
 from flask_login import current_user
 from flask_login.config import EXEMPT_METHODS
@@ -43,20 +43,26 @@ def role_required(role_name):
     def inner_function(func):
         @wraps(func)
         def decorated_view(*args, **kwargs):
+            if not type(role_name) == list:
+                raise ValueError('Pass a list as an argument')
+
             #checks if the specified role exists
-            if role_name not in [role.name for role in Role.query.all()]:
+            if not set(role_name).intersection([role.name for role in Role.query.all()]):
                 raise ValueError('Specified role required does not exist')
 
             #if the request method is in EXEMPT_METHODS or the LOGIN is disabled return the route
+            #without the need to login
             if request.method in EXEMPT_METHODS or current_app.config.get('LOGIN_DISABLED'):
                 return func(*args, **kwargs)
             #check is the current_user is logged in
-            if not current_user.is_authenticated:
+            if current_user.is_authenticated:
                  #if the specified role is in current_user's roles
-                if role_name in [role.name for role in current_user.roles]:
+                if set(role_name).intersection([role.name for role in current_user.roles]):
                     return func(*args, **kwargs)
                 else:
-                    return current_app.login_manager.unauthorized()
+                    abort(403)
+            else:
+                return current_app.login_manager.unauthorized()
 
         return decorated_view
     return inner_function

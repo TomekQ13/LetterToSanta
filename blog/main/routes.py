@@ -17,12 +17,3 @@ def home():
 @main.route("/about")
 def about():
     return render_template('about.html', title = 'About')
-
-
-@main.route("/test")
-@role_required('Admin')
-def test_page():
-    if Role.query.filter_by(name='Admin').first() in current_user.roles:
-        return render_template_string('''<h1> test page - authentication successful </h1>''')
-    else:
-        return render_template_string('''<h1> test page - authentication unsuccessful </h1>''')
