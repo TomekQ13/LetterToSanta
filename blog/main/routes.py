@@ -1,5 +1,9 @@
+from blog.users.utils import role_required
 from flask import render_template, request, Blueprint
-from blog.models import Post
+from flask.templating import render_template_string
+from flask_login import current_user
+from flask_login.utils import login_required
+from blog.models import Post, Role
 
 main = Blueprint('main', __name__)
 

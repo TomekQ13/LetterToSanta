@@ -1,11 +1,11 @@
 import os
-from flask import flash, redirect, render_template, request, url_for, Blueprint
-from flask_login import current_user, login_required, login_user, logout_user
 from blog import bcrypt, db
-from blog.users.forms import LoginForm, RegistrationForm, UpdateAccountForm, ResetPasswordForm, RequestResetForm
 from blog.models import Post, User
-from blog.users.utils import send_reset_email, save_picture
-
+from blog.users.forms import (LoginForm, RegistrationForm, RequestResetForm,
+                              ResetPasswordForm, UpdateAccountForm)
+from blog.users.utils import save_picture, send_reset_email
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
 
 users = Blueprint('users', __name__)
 
@@ -38,6 +38,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+
             if next_page:
                 return redirect(next_page)
             else:

@@ -1,9 +1,13 @@
 import os
 import secrets
 from PIL import Image
-from flask import url_for, current_app
+from flask import url_for, current_app, request, abort
 from flask_mail import Message
+from flask_login import current_user
+from flask_login.config import EXEMPT_METHODS
+from functools import wraps
 from blog import mail
+from blog.models import Role
 
 def save_picture(form_picture, output_size = (125, 125)):
     #form_picture - data from form of file
@@ -28,3 +32,41 @@ def send_reset_email(user):
 If you did not make this request then ignore this email and no changes will be made.
     '''
     mail.send(msg)
+
+def role_required(role_name):
+    '''
+    Required roles have to be passed in a list. There will be an or logical sign between the roles in the list.
+    For example passing role_required(['Admin', 'Writer]) enforces the user to have Admin OR Writer role.
+
+    This decorator combines the functionality of login_required decorator and role_required.
+    It first checks if the user is logged in, if not send the user to login page.
+    If the user is logged in and has the required role it returns the wrapped route.
+    If the user does not have the requred role it returns current_app.login_manager.unauthorized()
+    '''
+    def inner_function(func):
+        @wraps(func)
+        def decorated_view(*args, **kwargs):
+            if not type(role_name) == list:
+                raise ValueError('Pass a list as an argument')
+
+            #checks if the specified role exists
+            if not set(role_name).intersection([role.name for role in Role.query.all()]):
+                raise ValueError('Specified role required does not exist')
+
+            #if the request method is in EXEMPT_METHODS or the LOGIN is disabled return the route
+            #without the need to login
+            if request.method in EXEMPT_METHODS or current_app.config.get('LOGIN_DISABLED'):
+                return func(*args, **kwargs)
+
+            #check is the current_user is logged in
+            if current_user.is_authenticated:
+                 #if the specified role is in current_user's roles
+                if set(role_name).intersection(current_user.roles_names):
+                    return func(*args, **kwargs)
+                else:
+                    abort(403)
+            else:
+                return current_app.login_manager.unauthorized()
+
+        return decorated_view
+    return inner_function

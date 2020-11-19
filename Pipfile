@@ -15,6 +15,7 @@ flask-login = "*"
 pillow = "*"
 flask-mail = "*"
 psycopg2 = "*"
+flask-user = "*"
 
 [requires]
 python_version = "3.8"

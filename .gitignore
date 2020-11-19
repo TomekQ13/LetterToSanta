@@ -2,3 +2,6 @@
 settings.json
 site.db
 .env
+.jpg
+.png
+.helper_script.py

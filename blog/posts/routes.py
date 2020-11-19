@@ -3,11 +3,12 @@ from flask_login import current_user, login_required
 from blog import db
 from blog.posts.forms import PostForm
 from blog.models import Post
+from blog.users.utils import role_required
 
 posts = Blueprint('posts', __name__)
 
 @posts.route("/post/new", methods=['GET', 'POST'])
-@login_required
+@role_required(['Admin', 'Writer'])
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
@@ -28,11 +29,11 @@ def post(post_id):
     return render_template('post.html', title=post.title, post=post)
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
-@login_required
+@role_required(['Admin', 'Writer'])
 def post_update(post_id):
     post = Post.query.get_or_404(post_id)
 
-    if post.author != current_user:
+    if post.author != current_user and 'Admin' not in current_user.roles_names:
         abort(403)
 
     form = PostForm()
@@ -51,11 +52,11 @@ def post_update(post_id):
     return render_template('create_post.html', title='Update Post', form=form, legend='Update Post')
 
 @posts.route("/post/<int:post_id>/delete", methods=['POST'])
-@login_required
+@role_required(['Admin', 'Writer'])
 def post_delete(post_id):
     post = Post.query.get_or_404(post_id)
 
-    if post.author != current_user:
+    if post.author != current_user and 'Admin' not in current_user.roles_names:
         abort(403)
 
     db.session.delete(post)
