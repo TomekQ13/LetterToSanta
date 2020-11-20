@@ -17,6 +17,18 @@
         <p class="article-content">{{ post.content }}</p>
         </div>
     </article>
+    <!-- Comments -->
+    {% for comment in comments %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ comment.author.username }}</a>
+                    <small class="text-muted">{{ comment.date_posted.strftime('%d-%m-%Y') }}</small>
+                </div>
+            <p class="article-content">{{ comment.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
     <!-- Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -33,7 +45,7 @@
                 <input class="btn btn-danger" type="submit" value="Delete">
             </form>
             </div>
-        </div>
-        </div>
+        </div>        
     </div>
+
 {% endblock content %}

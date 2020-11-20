@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, request, url_for, abort, Blu
 from flask_login import current_user, login_required
 from blog import db
 from blog.posts.forms import PostForm
-from blog.models import Post
+from blog.models import Post, Comments
 from blog.users.utils import role_required
 
 posts = Blueprint('posts', __name__)
@@ -25,8 +25,9 @@ def new_post():
 @posts.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
+    comments = post.comments
 
-    return render_template('post.html', title=post.title, post=post)
+    return render_template('post.html', title=post.title, post=post, comments=comments)
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @role_required(['Admin', 'Writer'])
