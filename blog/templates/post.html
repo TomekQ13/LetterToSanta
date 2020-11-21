@@ -17,6 +17,11 @@
         <p class="article-content">{{ post.content }}</p>
         </div>
     </article>
+    <div>
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="{{ url_for('posts.new_comment', post_id = post.id) }}">New Comment</a>
+        <!-- <button type="button" class="btn btn-primary btn-lg btn-block mb-3" data-toggle="modal" data-target="#addCommentModal">Add comment</button> -->
+    </div>
+    
     <!-- Comments -->
     {% for comment in comments %}
         <article class="media content-section">
@@ -27,6 +32,11 @@
                 </div>
             <p class="article-content">{{ comment.content }}</p>
           </div>
+        {% if comment.author == current_user or 'Admin' in current_user.roles_names %}
+          <div>
+              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" comment-id ="{{ comment.id }}" data-target="#deleteCommentModal">Delete</button>
+          </div>
+        {% endif %}
         </article>
     {% endfor %}
     <!-- Modal -->
@@ -34,7 +44,7 @@
         <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
+            <h5 class="modal-title" id="deleteModalLabel">Delete the post?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
