@@ -74,12 +74,7 @@ def comment_delete(comment_id):
     db.session.commit()
     flash('The comment has been deleted.', 'success')
 
-    next_page = request.args.get('next')
-
-    if next_page:
-        return redirect(next_page)
-    else:
-        return redirect(url_for('main.home'))
+    return redirect(url_for('posts.post', post_id = comment.post_id))
 
 @posts.route("/post/<int:post_id>/comments/new", methods=['GET', 'POST'])
 def new_comment(post_id):
