@@ -34,7 +34,7 @@
           </div>
         {% if comment.author == current_user or 'Admin' in current_user.roles_names %}
           <div>
-              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" comment-id ="{{ comment.id }}" data-target="#deleteCommentModal">Delete</button>
+            <a class="btn btn-danger btn-sm" href="{{ url_for('posts.comment_delete', comment_id = comment.id) }}">Delete</a>
           </div>
         {% endif %}
         </article>
@@ -57,5 +57,5 @@
             </div>
         </div>        
     </div>
-
+    <!-- Hmm maybe the button can redirtect to a delete comment route -->
 {% endblock content %}

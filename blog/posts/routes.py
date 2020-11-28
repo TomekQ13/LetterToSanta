@@ -16,7 +16,6 @@ def new_post():
         db.session.add(post)
         db.session.commit()
         flash('The post has been created','success')
-
         return redirect(url_for('main.home'))
 
     return render_template('create_post.html', title='New Post', form=form, legend='New Post')
@@ -64,7 +63,7 @@ def post_delete(post_id):
 
     return redirect(url_for('main.home'))
 
-@posts.route("/comment/<int:comment_id>/delete", methods=['POST'])
+@posts.route("/comment/<int:comment_id>/delete", methods=['GET', 'POST'])
 def comment_delete(comment_id):
     comment = Comments.query.get_or_404(comment_id)
 
