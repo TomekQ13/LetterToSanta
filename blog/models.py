@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     active = db.Column(db.Boolean(), nullable=False, default=0)
     posts = db.relationship('Post', backref='author', lazy=True)
+    comments = db.relationship('Comments', backref='author', lazy=True)
     roles = db.relationship('Role', secondary='user_roles',  backref=db.backref('user', lazy=True), lazy='subquery')
 
     @property
@@ -29,7 +30,7 @@ class User(db.Model, UserMixin):
             user_id = s.loads(token)['user_id']
         except:
             return None
-        
+
         return User.query.get(user_id)
 
     def __repr__(self):
@@ -41,6 +42,7 @@ class Post(db.Model):
     title = db.Column(db.String(128),nullable=False)
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default = datetime.now)
+    comments = db.relationship('Comments', backref='post', lazy=True, order_by='Comments.date_posted.desc()')
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
@@ -53,9 +55,25 @@ class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50), unique=True)
 
+    def __repr__(self):
+        return f"Role('{self.id}', '{self.name}')"
+
 class UserRoles(db.Model):
     __tablename__='user_roles'
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('role.id', ondelete='CASCADE'))
+
+    def __repr__(self):
+        return f"UserRoles('{self.id}', '{self.user_id}', '{self.role_id}')"
+
+class Comments(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    post_id = db.Column(db.Integer(), db.ForeignKey('post.id'), nullable=False)
+    author_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default = datetime.now)
+
+    def __repr__(self):
+        return f"Comments('{self.id}', '{self.post_id}', '{self.author_id}')"
 
