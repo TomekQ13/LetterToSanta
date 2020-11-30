@@ -64,6 +64,7 @@ def post_delete(post_id):
     return redirect(url_for('main.home'))
 
 @posts.route("/comment/<int:comment_id>/delete", methods=['GET', 'POST'])
+@login_required
 def comment_delete(comment_id):
     comment = Comments.query.get_or_404(comment_id)
 
@@ -77,6 +78,7 @@ def comment_delete(comment_id):
     return redirect(url_for('posts.post', post_id = comment.post_id))
 
 @posts.route("/post/<int:post_id>/comments/new", methods=['GET', 'POST'])
+@login_required
 def new_comment(post_id):
     post = Post.query.get_or_404(post_id)
     form = CommentForm()

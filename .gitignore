@@ -4,6 +4,6 @@ site.db
 .env
 .jpg
 .png
-.helper_script.py
+helper_script.py
 SQLs
 restore_from_backup.sql
