@@ -1,6 +1,6 @@
 body {
-    background: #fafafa;
-    color: #333333;
+    background: #ffffff;
+    color: #000000;
     margin-top: 5rem;
   }
   
@@ -9,15 +9,15 @@ body {
   }
    
   .bg-steel {
-    background-color: #240090;
+    background-color: #ffffff;
   }
   
   .site-header .navbar-nav .nav-link {
-    color: #cbd5db;
+    color: #000000;
   }
   
   .site-header .navbar-nav .nav-link:hover {
-    color: #ffffff;
+    color:  #a3a3a3;
   }
   
   .site-header .navbar-nav .nav-link.active {
@@ -27,7 +27,6 @@ body {
   .content-section {
     background: #ffffff;
     padding: 10px 20px;
-    border: 1px solid #dddddd;
     border-radius: 3px;
     margin-bottom: 20px;
   }
@@ -37,7 +36,7 @@ body {
   }
   
   a.article-title:hover {
-    color: #0059a7;
+    color: #a3a3a3;
     text-decoration: none;
   }
   
@@ -55,11 +54,6 @@ body {
     padding-bottom: 1px;
     margin-bottom: 4px;
     border-bottom: 1px solid #e3e3e3
-  }
-  
-  .article-metadata a:hover {
-    color: #333;
-    text-decoration: none;
   }
   
   .article-svg {
@@ -80,7 +74,69 @@ body {
   }
 
   .btn-info {
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #000000;
+  }
+
+  .navbar-dark .navbar-brand {
+    color: #000000;
+  }
+
+  .navbar-dark:hover .navbar-brand:hover {
+    color: #a3a3a3;
+  }
+
+  .btn-primary {
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #000000;
+  }
+
+  .btn-primary:hover {
     color: #ffffff;
-    background-color: #240090;
-    border-color: #240090;
+    background-color: #000000;
+    border-color: #000000;
+  }
+
+  .btn-danger {
+    color: #dc3545;
+    background-color: #ffffff;
+    border-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    color: #ffffff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .btn-secondary {
+    color: #6c757d;
+    background-color: #ffffff;
+    border-color: #6c757d;
+  }
+
+  .btn-secondary:hover {
+    color: #ffffff;
+    background-color: #000000;
+    border-color: #000000;
+  }
+
+  .btn-secondary a:hover {
+    color: #ffffff;
+    background-color: #000000;
+    border-color: #000000;
+  }
+
+  .btn-info {
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #000000;
+  }
+
+  .btn-info:hover {
+    color: #ffffff;
+    background-color: #616060;
+    border-color: #616060;
   }
