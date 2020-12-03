@@ -91,3 +91,25 @@ def new_comment(post_id):
 
     return render_template('add_comment.html', title='New Comment', form=form, legend='New Comment')
 
+@posts.route("/post/<int:post_id>/comments/<int:comment_id>", methods=['GET', 'POST'])
+def comment_update(post_id, comment_id):
+    post = Post.query.get_or_404(post_id)
+    comment = Comments.query.get_or_404(comment_id)
+
+    if post.author != current_user and 'Admin' not in current_user.roles_names:
+        abort(403)
+
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        comment.content = form.content.data
+        db.session.commit()
+        flash('The comment has been updated.', 'success')
+        return redirect(url_for('posts.post', post_id=post.id))
+
+    #form will be filled with actual data
+    elif request.method == 'GET':
+        form.content.data = comment.content
+
+    return render_template('add_comment.html', title='Update Comment', form=form, legend='Update Comment')
+
