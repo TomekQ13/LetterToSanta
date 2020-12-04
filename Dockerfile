@@ -16,5 +16,6 @@
 
 FROM python:3.8
 RUN pip install pipenv
-COPY Pipfile Pipfile.lock blog .env run.py /app/
+ENV PROJECT_DIR /blog
+COPY Pipfile Pipfile.lock blog .env run.py ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
