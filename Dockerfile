@@ -19,4 +19,5 @@ RUN pip install pipenv
 ENV PROJECT_DIR /blog
 WORKDIR ${PROJECT_DIR}
 COPY Pipfile Pipfile.lock blog .env run.py ${PROJECT_DIR}/app/
+WORKDIR ${PROJECT_DIR}/app/
 RUN pipenv install --system --deploy
