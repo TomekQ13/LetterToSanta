@@ -21,6 +21,5 @@ COPY Pipfile Pipfile.lock .env run.py ${PROJECT_DIR}/
 COPY blog ${PROJECT_DIR}/blog
 WORKDIR ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
-RUN pipenv install python-dotenv --system --deploy
 RUN from dotenv import load_dotenv
 RUN load_dotenv()

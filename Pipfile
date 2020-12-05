@@ -16,6 +16,7 @@ pillow = "*"
 flask-mail = "*"
 psycopg2 = "*"
 flask-user = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
