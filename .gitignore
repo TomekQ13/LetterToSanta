@@ -7,3 +7,4 @@ settings.json
 helper_script.py
 SQLs
 restore_from_backup.sql
+.ipynb_checkpoints
