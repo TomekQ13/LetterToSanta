@@ -23,3 +23,4 @@ COPY Pipfile Pipfile.lock .env run.py ${PROJECT_DIR}/
 COPY blog ${PROJECT_DIR}/blog
 WORKDIR ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
+ENTRYPOINT flask run --host 0.0.0.0
