@@ -16,7 +16,7 @@
 
 FROM python:3.8
 RUN pip install pipenv
-RUN apt install nginx
+RUN apt-get install nginx
 ENV PROJECT_DIR /blog
 ENV FLASK_APP run.py
 ENV FLASK_DEBUG 1
