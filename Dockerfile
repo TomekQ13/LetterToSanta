@@ -26,4 +26,5 @@ RUN pipenv install --system --deploy
 ENTRYPOINT gunicorn -w 3 run:app
 
 FROM nginx:latest
-
+RUN rm /etc/sites-enabled/default
+COPY blog_nginx /etc/nginx/sites-enabled/
