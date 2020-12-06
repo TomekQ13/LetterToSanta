@@ -19,7 +19,7 @@ RUN pip install pipenv
 
 RUN apt-get update && apt-get install -y nginx
 RUN rm /etc/nginx/sites-enabled/default
-RUN apt-get update && apt-get install systemd
+RUN apt-get update && apt-get install -y systemd
 COPY blog_nginx /etc/nginx/sites-enabled/
 COPY proxy_params /etc/nginx/
 
