@@ -30,5 +30,4 @@ COPY blog ${PROJECT_DIR}/blog
 WORKDIR ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
 
-RUN systemctl restart nginx
 ENTRYPOINT gunicorn -w 3 run:app
