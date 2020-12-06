@@ -3,7 +3,7 @@ server {
         server_name 139.162.132.233;
 
         location /static {
-                alias /home/Blog/blog/static;
+                alias /blog/blog/static;
         }
 
         location / {
