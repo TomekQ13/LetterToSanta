@@ -23,9 +23,10 @@ COPY Pipfile Pipfile.lock .env run.py ${PROJECT_DIR}/
 COPY blog ${PROJECT_DIR}/blog
 WORKDIR ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
+ENTRYPOINT gunicorn -w 3 run:app
 
 FROM nginx:latest
 COPY blog_nginx /etc/nginx/sites-enabled/
 COPY proxy_params /etc/nginx/
 
-ENTRYPOINT gunicorn -w 3 run:app
+
