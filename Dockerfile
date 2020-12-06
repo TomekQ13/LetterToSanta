@@ -26,6 +26,6 @@ RUN pipenv install --system --deploy
 
 FROM nginx:latest
 COPY blog_nginx /etc/nginx/sites-enabled/
-COPY /etc/nginx/proxy_params /etc/nginx/
+COPY proxy_params /etc/nginx/
 
 ENTRYPOINT gunicorn -w 3 run:app
