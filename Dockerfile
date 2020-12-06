@@ -16,6 +16,7 @@
 
 FROM python:3.8
 RUN pip install pipenv
+RUN apt install nginx
 ENV PROJECT_DIR /blog
 ENV FLASK_APP run.py
 ENV FLASK_DEBUG 1
@@ -23,4 +24,4 @@ COPY Pipfile Pipfile.lock .env run.py ${PROJECT_DIR}/
 COPY blog ${PROJECT_DIR}/blog
 WORKDIR ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
-ENTRYPOINT flask run --host 0.0.0.0
+ENTRYPOINT gunicorn -w 3 run:app

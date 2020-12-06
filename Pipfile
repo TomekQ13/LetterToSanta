@@ -17,6 +17,7 @@ flask-mail = "*"
 psycopg2 = "*"
 flask-user = "*"
 python-dotenv = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
