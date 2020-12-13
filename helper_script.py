@@ -1,4 +1,4 @@
-from blog import db, create_app
+from ListDoMikolaja import db, create_app
 
 app = create_app()
 app.app_context().push()

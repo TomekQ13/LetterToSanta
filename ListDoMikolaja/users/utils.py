@@ -6,8 +6,8 @@ from flask_mail import Message
 from flask_login import current_user
 from flask_login.config import EXEMPT_METHODS
 from functools import wraps
-from blog import mail
-from blog.models import Role
+from ListDoMikolaja import mail
+from ListDoMikolaja.models import Role
 
 def save_picture(form_picture, output_size = (125, 125)):
     #form_picture - data from form of file

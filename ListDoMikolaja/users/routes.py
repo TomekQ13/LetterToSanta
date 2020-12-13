@@ -1,9 +1,9 @@
 import os
-from blog import bcrypt, db
-from blog.models import Post, User
-from blog.users.forms import (LoginForm, RegistrationForm, RequestResetForm,
+from ListDoMikolaja import bcrypt, db
+from ListDoMikolaja.models import User
+from ListDoMikolaja.users.forms import (LoginForm, RegistrationForm, RequestResetForm,
                               ResetPasswordForm, UpdateAccountForm)
-from blog.users.utils import save_picture, send_reset_email
+from ListDoMikolaja.users.utils import save_picture, send_reset_email
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
@@ -15,13 +15,16 @@ def register():
         return redirect(url_for('main.home'))
 
     form = RegistrationForm()
-
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username = form.username.data, email=form.email.data, password=hashed_password)
+        user = User(username = form.username.data,
+            email=form.email.data,
+            password=hashed_password,
+            name=form.name.data,
+            surname=form.surname.data)
         db.session.add(user)
         db.session.commit()
-        flash('Your account has been created. You can now log in.', 'success')
+        flash('Twoje konto zostało utworzone.', 'success')
         return redirect(url_for('users.login'))
 
     return render_template('register.html', title = 'Register', form=form)
@@ -32,13 +35,11 @@ def login():
         return redirect(url_for('main.home'))
 
     form = LoginForm()    
-
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-
             if next_page:
                 return redirect(next_page)
             else:
@@ -85,14 +86,6 @@ def account():
 
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title = 'Account', image_file=image_file, form=form)
-
-@users.route("/user/<string:username>")
-def user_posts(username):
-    page = request.args.get('page', 1, type=int)
-    user = User.query.filter_by(username=username).first_or_404()
-    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
-    return render_template('user_posts.html', posts=posts, user=user)
-
 
 @users.route("/reset_password", methods=['GET', 'POST'])
 def reset_request():
