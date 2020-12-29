@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div>
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="{{ url_for('friends.new_friend_request') }}">Wyślij zaproszenie do znajomych</a>
+    </div>
+    {% for friend in friends %}
+        <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename = 'profile_pics/' + post.author.image_file) }}">
+            <div class="media-body">
+                <a class="mr-2" href="/">{{ friend.username }}</p>
+                <p class="mr-2">{{ friend.name friend.surname }}</p>
+        </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

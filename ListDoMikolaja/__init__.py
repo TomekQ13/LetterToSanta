@@ -27,11 +27,13 @@ def create_app(config_class=Config):
     from ListDoMikolaja.users.routes import users
     from ListDoMikolaja.listy.routes import listy
     from ListDoMikolaja.main.routes import main
+    from ListDoMikolaja.friends.routes import friends
     from ListDoMikolaja.errors.handlers import errors
     app.register_blueprint(users)
     app.register_blueprint(listy)
     app.register_blueprint(main)
-    app.register_blueprint(errors)    
+    app.register_blueprint(errors)
+    app.register_blueprint(friends)
 
     return app
 

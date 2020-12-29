@@ -9,3 +9,4 @@ SQLs
 restore_from_backup.sql
 .ipynb_checkpoints
 site.db
+__pycache__

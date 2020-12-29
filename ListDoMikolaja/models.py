@@ -58,3 +58,26 @@ class Letter(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
 
+class Friends(db.Model):
+    __tablename__ = 'friends'
+    id = db.Column(db.Integer(), primary_key=True)
+    invited_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    accepted_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    date_accepted = db.Column(db.DateTime, nullable=False, default = datetime.now)
+
+class FriendRequest(db.Model):
+    __tablename__ = 'friend_request'
+    id = db.Column(db.Integer(), primary_key=True)
+    sent_by_id =  db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    sent_to_id =  db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    date_sent = db.Column(db.DateTime, nullable=False, default = datetime.now)
+    status_cd = db.Column(db.Integer(), nullable=False, default=0)
+    #status_cd 0-sent, 1-accepted, 2-declined
+
+class LetterLine(db.Model):
+    __tablename__ = 'letter_line'
+    line_id = db.Column(db.Integer(), primary_key=True)
+    letter_id = db.Column(db.Integer(), db.ForeignKey('letter.id', ondelete='CASCADE'))
+    line_content = db.Column(db.Text, nullable=False)
+    taken = db.Column(db.Boolean, nullable=False, default=False)
+
