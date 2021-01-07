@@ -9,10 +9,22 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(128))
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    password = db.Column(db.String(60), nullable=False)
-    letter = db.relationship('Letter', backref='author', lazy=True)
+    password = db.Column(db.String(60), nullable=False)    
     name = db.Column(db.String(128))
     surname = db.Column(db.String(128))
+    letter = db.relationship('Letter', backref='author', lazy=True)
+    friends = db.relationship('User', secondary='friends',
+        primaryjoin = "Friends.invited_id == User.id",
+        secondaryjoin = "Friends.accepted_id == User.id"
+    )
+    requests_sent = db.relationship('FriendRequest',
+        primaryjoin = 'User.id == FriendRequest.sent_by_id',
+        backref = 'sender'
+    )
+    requests_received = db.relationship('FriendRequest',
+        foreign_keys = 'FriendRequest.sent_to_id',
+        backref = 'receiver'
+    )
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -65,14 +77,23 @@ class Friends(db.Model):
     accepted_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     date_accepted = db.Column(db.DateTime, nullable=False, default = datetime.now)
 
+    def __repr__(self):
+        return f"Friends(date accepted: '{self.date_accepted}', invited: '{self.invited_id}', accepted: '{self.accepted_id}')"
+
 class FriendRequest(db.Model):
     __tablename__ = 'friend_request'
     id = db.Column(db.Integer(), primary_key=True)
     sent_by_id =  db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     sent_to_id =  db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     date_sent = db.Column(db.DateTime, nullable=False, default = datetime.now)
-    status_cd = db.Column(db.Integer(), nullable=False, default=0)
+    date_status_change = db.Column(db.DateTime)
+    status_cd = db.Column(db.Integer(), nullable=False,
+        default=0, comment="0-sent, 1-accepted, 2-declined"
+    )
     #status_cd 0-sent, 1-accepted, 2-declined
+
+    def __repr__(self):
+        return f'FriendRequest(sent_by_id: {self.sent_by_id}, sent_to_id: {self.sent_to_id}, status_cd: {self.status_cd}'
 
 class LetterLine(db.Model):
     __tablename__ = 'letter_line'

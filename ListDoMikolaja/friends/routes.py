@@ -59,12 +59,11 @@ def new_friend_request():
 @friends.route("/friends", methods=['GET'])
 @login_required
 def friends_page():
-    #TO DO a query which returns all the friends of a user
-    return render_template('friends.html', friends=friends_results)
+    return render_template('friends.html', friends=current_user.friends)
 
 @friends.route("/friends_requests", methods=['GET'])
 @login_required
 def friends_request_list():
     requests_sent = FriendRequest.query.filter(FriendRequest.sent_by_id==current_user.id)
-    requests_received = FriendRequest.query.filter_by((FriendRequest.sent_to_id==current_user.id) and (FriendRequest.status_cd==0))
+    requests_received = FriendRequest.query.filter((FriendRequest.sent_to_id==current_user.id) and (FriendRequest.status_cd==0))
     return render_template('friends_request_list.html', requests_received=requests_received, requests_sent=requests_sent)
