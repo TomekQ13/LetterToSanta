@@ -9,7 +9,7 @@ db.create_all()
 from ListDoMikolaja.models import FriendRequest, User
 from ListDoMikolaja.models import Friends
 
-user1 = User(username='tkuczak',email='asd',password='aaa')
+user1 = User(username='tkuczak',email='asd',password='aaa', name='Tomasz', surname='KKKKK')
 db.session.add(user1)
 db.session.commit()
 
@@ -38,7 +38,7 @@ db.session.commit()
 
 request1 = FriendRequest(sent_to_id=1, sent_by_id=3)
 request3 = FriendRequest(sent_to_id=1, sent_by_id=2, status_cd=1)
-request2 = FriendRequest(sent_to_id=2, sent_by_id=1)
+request2 = FriendRequest(sent_to_id=2, sent_by_id=1, status_cd=0)
 db.session.add(request1)
 db.session.commit()
 db.session.add(request2)

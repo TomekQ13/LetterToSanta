@@ -1,8 +1,10 @@
+from datetime import datetime
 from flask import Blueprint, flash, render_template, redirect, url_for
 from flask_login import current_user, login_required
 from ListDoMikolaja import db
 from ListDoMikolaja.friends.forms import SendFriendRequestForm
 from ListDoMikolaja.models import FriendRequest, User, Friends
+
 
 friends = Blueprint('friends', __name__)
 
@@ -64,6 +66,15 @@ def friends_page():
 @friends.route("/friends_requests", methods=['GET'])
 @login_required
 def friends_request_list():
-    requests_sent = FriendRequest.query.filter(FriendRequest.sent_by_id==current_user.id)
-    requests_received = FriendRequest.query.filter((FriendRequest.sent_to_id==current_user.id) and (FriendRequest.status_cd==0))
-    return render_template('friends_request_list.html', requests_received=requests_received, requests_sent=requests_sent)
+    requests_received_0 = [x for x in current_user.requests_received if x.status_cd == 0]
+    return render_template('friends_request_list.html', requests_received=requests_received_0)
+
+@friends.route("/friends_request/<int:request_id>")
+def request_decline(request_id):
+    friend_request = FriendRequest.query.get_or_404(request_id)
+    friend_request.status_cd = 2
+    friend_request.date_status_change = datetime.now()
+    db.session.commit()
+    flash('Zaproszenie zostało odrzucone.', 'success')
+    return redirect(url_for('friends.friends_request_list'))
+

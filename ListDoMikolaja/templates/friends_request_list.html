@@ -1,14 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% for request in requests %}
+    {% for request in requests_received %}
         <article class="media content-section">
             <div class="media-body">
-                <div class="article-metadata">
-                    <a class="mr-2" href="/">{{ request.author.username }}</a>
-                    <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y') }}</small>
-                </div>
-                <p class="article-content">{{ post.content }}</p>
-          </div>
+                {% if request.sender.name and request.sender.surname %}
+                    <div class="article-metadata">
+                        <a class="mr-2" href="/">
+                            {{ request.sender.name }}  {{ request.sender.surname }} ({{ request.sender.username }})
+                        </a>
+                    </div>                    
+                {% else %}
+                    <div class="article-metadata">
+                        <a class="mr-2" href="/">
+                            {{ request.sender.username }}
+                        </a>
+                    </div>     
+                {% endif %}
+            </div>
+            <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{url_for('friends.request_decline', request_id = request.id)}}">Zaakceptuj</a>
+                <a class="btn btn-danger btn-sm" href="/">Odrzuć</a>
+            </div>
         </article>
     {% endfor %}
 {% endblock content %}
