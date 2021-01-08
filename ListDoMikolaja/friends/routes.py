@@ -20,29 +20,25 @@ def new_friend_request():
             return render_template('send_friend_request.html', form=form)
 
         #if users are friends already
-        current_user_friends = Friends.query \
-            .filter(((Friends.invited_id==current_user.id) and (Friends.accepted_id==sent_to_user.id)) \
-                or ((Friends.invited_id==sent_to_user.id) and (Friends.accepted_id==current_user.id))) \
-            .first()
-        if current_user_friends:
+        if form.username.data in {x.username for x in current_user.friends}:
             flash('Ten użytkownik już jest Twoim znajomym', 'info')
             return render_template('send_friend_request.html', form=form)
 
         #if the same request was already sent
         the_same_request = FriendRequest.query \
-            .filter((FriendRequest.sent_by_id==current_user.id) and \
-                 (FriendRequest.sent_to_id==sent_to_user.id) and \
-                 (FriendRequest.status_cd==0)) \
+            .filter(FriendRequest.sent_by_id==current_user.id, \
+                 FriendRequest.sent_to_id==sent_to_user.id, \
+                 FriendRequest.status_cd==0) \
             .first()
         if the_same_request:
-            flash(f'Już wysłałeś zaproszenie do tego użytkownika. Poczekaj aż zostanie ono zaakceptowane lub odrzucone.', 'info')
+            flash(f'Zaproszenie do tego użytkownika zostało już wysłane. Poczekaj aż zostanie ono zaakceptowane lub odrzucone.', 'info')
             return redirect(url_for('friends.friends_page'))
 
         #if the opposite requrest was already sent
         opposite_request = FriendRequest.query \
-            .filter((FriendRequest.sent_by_id==sent_to_user.id) and \
-                 (FriendRequest.sent_to_id==current_user.id) and \
-                 (FriendRequest.status_cd==0)) \
+            .filter(FriendRequest.sent_by_id==sent_to_user.id, \
+                 FriendRequest.sent_to_id==current_user.id, \
+                 FriendRequest.status_cd==0) \
             .first()
         if opposite_request:
             flash(f'Ten użytkownik już wysłał Ci zaproszenie. Możesz je zaakceptowac w zakładce Zaproszenia do znajomych.', 'info')
@@ -69,12 +65,24 @@ def friends_request_list():
     requests_received_0 = [x for x in current_user.requests_received if x.status_cd == 0]
     return render_template('friends_request_list.html', requests_received=requests_received_0)
 
-@friends.route("/friends_request/<int:request_id>")
+@friends.route("/friends_request/decline/<int:request_id>")
 def request_decline(request_id):
     friend_request = FriendRequest.query.get_or_404(request_id)
-    friend_request.status_cd = 2
+    friend_request.status_cd = 1
     friend_request.date_status_change = datetime.now()
     db.session.commit()
     flash('Zaproszenie zostało odrzucone.', 'success')
     return redirect(url_for('friends.friends_request_list'))
+
+@friends.route("/friends_request/accept/<int:request_id>")
+def request_accept(request_id):
+    friend_request = FriendRequest.query.get_or_404(request_id)
+    new_friend = Friends(invited_id=friend_request.sent_by_id,
+        accepted_id=friend_request.sent_to_id)
+    db.session.delete(friend_request)
+    db.session.add(new_friend)
+    db.session.commit()
+    flash('Zaproszenie zostało zaakceptowane', 'success')
+    return redirect(url_for('friends.friends_request_list'))
+
 

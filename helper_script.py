@@ -3,11 +3,13 @@ from ListDoMikolaja import db, create_app
 app = create_app()
 app.app_context().push()
 
+from ListDoMikolaja.models import FriendRequest, User
+from ListDoMikolaja.models import Friends
+
 db.drop_all()
 db.create_all()
 
-from ListDoMikolaja.models import FriendRequest, User
-from ListDoMikolaja.models import Friends
+
 
 user1 = User(username='tkuczak',email='asd',password='aaa', name='Tomasz', surname='KKKKK')
 db.session.add(user1)

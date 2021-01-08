@@ -18,8 +18,8 @@
                 {% endif %}
             </div>
             <div>
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{url_for('friends.request_decline', request_id = request.id)}}">Zaakceptuj</a>
-                <a class="btn btn-danger btn-sm" href="/">Odrzuć</a>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{url_for('friends.request_accept', request_id = request.id)}}">Zaakceptuj</a>
+                <a class="btn btn-danger btn-sm" href="{{url_for('friends.request_decline', request_id = request.id)}}">Odrzuć</a>
             </div>
         </article>
     {% endfor %}

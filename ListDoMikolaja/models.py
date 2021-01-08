@@ -14,11 +14,11 @@ class User(db.Model, UserMixin):
     surname = db.Column(db.String(128))
     letter = db.relationship('Letter', backref='author', lazy=True)
     friends = db.relationship('User', secondary='friends',
-        primaryjoin = "Friends.invited_id == User.id",
-        secondaryjoin = "Friends.accepted_id == User.id"
-    )
+        primaryjoin = "or_(Friends.invited_id == User.id, Friends.accepted_id == User.id)",
+        secondaryjoin = "or_(Friends.invited_id == User.id, Friends.accepted_id == User.id)"
+    )#here is currently the problem that current user is also in friends
     requests_sent = db.relationship('FriendRequest',
-        primaryjoin = 'User.id == FriendRequest.sent_by_id',
+        foreign_keys = 'FriendRequest.sent_by_id',
         backref = 'sender'
     )
     requests_received = db.relationship('FriendRequest',
@@ -88,9 +88,9 @@ class FriendRequest(db.Model):
     date_sent = db.Column(db.DateTime, nullable=False, default = datetime.now)
     date_status_change = db.Column(db.DateTime)
     status_cd = db.Column(db.Integer(), nullable=False,
-        default=0, comment="0-sent, 1-accepted, 2-declined"
+        default=0, comment="0-sent, 1-declined"
     )
-    #status_cd 0-sent, 1-accepted, 2-declined
+    #status_cd 0-sent, 1-declined
 
     def __repr__(self):
         return f'FriendRequest(sent_by_id: {self.sent_by_id}, sent_to_id: {self.sent_to_id}, status_cd: {self.status_cd}'
