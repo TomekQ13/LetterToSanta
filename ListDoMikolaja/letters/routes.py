@@ -1,25 +1,27 @@
-from flask import Blueprint, flash, render_template, redirect, url_for, abort
+from sys import stderr
+from flask import Blueprint, flash, render_template, redirect, url_for, abort, request
 from flask_login import current_user, login_required
+from sqlalchemy.sql.elements import True_
 from ListDoMikolaja import db
-from ListDoMikolaja.listy.forms import LetterForm
-from ListDoMikolaja.models import Letter
+from ListDoMikolaja.letters.forms import LetterForm
+from ListDoMikolaja.models import Letter, User
 
-listy = Blueprint('listy', __name__)
+letters = Blueprint('letters', __name__)
 
-@listy.route("/letter")
+@letters.route("/letter")
 @login_required
 def letter():
     letter = Letter.query.filter_by(user_id = current_user.id).first()
     return render_template('letter.html', title='Mój list', letter=letter)
 
-@listy.route("/letter/new", methods=['GET', 'POST'])
+@letters.route("/letter/new", methods=['GET', 'POST'])
 @login_required
 def new_letter():
     #if user already has a letter
     existing_letter = Letter.query.filter_by(user_id = current_user.id).first()
     if existing_letter:
         flash('Już napisałeś list. Zaktualizuj go lub usuń jeżeli chcesz zacząć od nowa.', 'warning')
-        return redirect(url_for('listy.letter'))
+        return redirect(url_for('letters.letter'))
 
     form = LetterForm()
     if form.validate_on_submit():
@@ -27,12 +29,13 @@ def new_letter():
         db.session.add(letter)
         db.session.commit()
         flash('List został dodany pomyślnie!', 'success')
-        return redirect(url_for('listy.letter'))
+        return redirect(url_for('letters.letter'))
 
     letter = Letter.query.filter_by(user_id = current_user.id).first()
     return render_template('new_letter.html', form=form, letter=letter, legend='Napisz list!')
 
-@listy.route("/letter/delete", methods=['POST'])
+@letters.route("/letter/delete", methods=['POST'])
+@login_required
 def delete_letter():
     letter = Letter.query.filter_by(user_id=current_user.id).first()
     #if current_user is not an author and current user is not an admin
@@ -42,4 +45,22 @@ def delete_letter():
     db.session.delete(letter)
     db.session.commit()
     flash('List został usunięty.', 'success')
-    return redirect(url_for('listy.letter'))
+    return redirect(url_for('letters.letter'))
+
+@letters.route("/letter/friends_letter", methods=['GET'])
+@login_required
+def friends_letter():
+    user_id = request.args.get('user_id')
+    user = User.query.get(user_id)
+    if user:
+        letter = Letter.query.filter_by(user_id=user_id).first()
+    else:
+        flash('Nieznany użytkownik.', 'danger')
+        return redirect(url_for('main.home'))
+
+    if int(user_id) in {x.id for x in current_user.friends}:
+        is_friend = True
+    else:
+        is_friend = False
+
+    return render_template('friend_letter.html', letter=letter, is_friend = is_friend)

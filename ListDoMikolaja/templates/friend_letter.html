@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if is_friend and letter %}
+        <article class="media content-section">
+            <div class="media-body">
+                <h2 class="article-title">{{ letter.title }}</h2>
+                <p class="article-content">{{ letter.content }}</p>
+                <div class="article-metadata">
+                    <small class="text-muted">Ostatnia aktualizacja {{ letter.date_posted.strftime('%d.%m.%Y') }}</small>
+                </div>
+            </div>            
+        </article>        
+    {% elif is_friend and not letter %}
+    <article class="media content-section">
+        <div class="media-body">
+            <h2 class="article-title">
+                Ten użytkownik nie napisał jeszcze listu.
+            </h2>
+        </div>            
+    </article>   
+    {% else %}
+    <article class="media content-section">
+        <div class="media-body">
+            <h2 class="article-title">
+                Ten użytkownik nie jest Twoim znajomym. <br>
+                Dodaj go do znajomych żeby widzieć jego list.
+                {{ is_friend }} {{ letter }} {{ friend_id }}
+            </h2>
+        </div>            
+    </article>    
+    {% endif %}    
+{% endblock content %}

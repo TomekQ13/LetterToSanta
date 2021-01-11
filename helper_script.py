@@ -23,10 +23,6 @@ friend = Friends(id = 1,invited_id = 1,accepted_id = 2)
 db.session.add(friend)
 db.session.commit()
 
-friend2 = Friends(invited_id = 2,accepted_id = 1)
-db.session.add(friend2)
-db.session.commit()
-
 tk = User.query.get(1)
 tk2 = User.query.get(2)
 

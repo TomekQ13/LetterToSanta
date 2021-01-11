@@ -19,7 +19,7 @@
         </article>
     {% else %}
         <div>
-            <a class="btn btn-primary btn-lg btn-block mb-3" href="{{ url_for('listy.new_letter') }}">Nowy list</a>
+            <a class="btn btn-primary btn-lg btn-block mb-3" href="{{ url_for('letters.new_letter') }}">Nowy list</a>
         </div>
     {% endif %}
     
@@ -35,11 +35,10 @@
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <form action ="{{ url_for('listy.delete_letter') }}" method="POST">
+            <form action ="{{ url_for('letters.delete_letter') }}" method="POST">
                 <input class="btn btn-danger" type="submit" value="Delete">
             </form>
             </div>
         </div>        
     </div>
-    <!-- Hmm maybe the button can redirtect to a delete comment route -->
 {% endblock content %}

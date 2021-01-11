@@ -13,10 +13,14 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(128))
     surname = db.Column(db.String(128))
     letter = db.relationship('Letter', backref='author', lazy=True)
-    friends = db.relationship('User', secondary='friends',
-        primaryjoin = "or_(Friends.invited_id == User.id, Friends.accepted_id == User.id)",
-        secondaryjoin = "or_(Friends.invited_id == User.id, Friends.accepted_id == User.id)"
-    )#here is currently the problem that current user is also in friends
+    friends_accepted = db.relationship('User', secondary='friends',
+        primaryjoin = "Friends.accepted_id == User.id",
+        secondaryjoin = "Friends.invited_id == User.id"
+    )
+    friends_invited = db.relationship('User', secondary='friends',
+        primaryjoin = "Friends.invited_id == User.id",
+        secondaryjoin = "Friends.accepted_id == User.id"
+    )
     requests_sent = db.relationship('FriendRequest',
         foreign_keys = 'FriendRequest.sent_by_id',
         backref = 'sender'
@@ -25,6 +29,9 @@ class User(db.Model, UserMixin):
         foreign_keys = 'FriendRequest.sent_to_id',
         backref = 'receiver'
     )
+    @property
+    def friends(self):
+        return self.friends_accepted + self.friends_invited
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
