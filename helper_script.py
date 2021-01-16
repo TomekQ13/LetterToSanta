@@ -3,7 +3,7 @@ from ListDoMikolaja import db, create_app
 app = create_app()
 app.app_context().push()
 
-from ListDoMikolaja.models import FriendRequest, User
+from ListDoMikolaja.models import FriendRequest, LetterLine, User
 from ListDoMikolaja.models import Friends
 
 db.drop_all()
@@ -42,4 +42,10 @@ db.session.commit()
 db.session.add(request2)
 db.session.commit()
 db.session.add(request3)
+db.session.commit()
+
+letter_line1=LetterLine(user_id=1, line_content='asdasdavsdv')
+db.session.add(letter_line1)
+letter_line2=LetterLine(user_id=1, line_content='sssdsdsddsdsds', taken=1)
+db.session.add(letter_line2)
 db.session.commit()

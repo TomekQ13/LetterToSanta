@@ -21,6 +21,10 @@ class User(db.Model, UserMixin):
         primaryjoin = "Friends.invited_id == User.id",
         secondaryjoin = "Friends.accepted_id == User.id"
     )
+    @property
+    def friends(self):
+        return self.friends_accepted + self.friends_invited
+
     requests_sent = db.relationship('FriendRequest',
         foreign_keys = 'FriendRequest.sent_by_id',
         backref = 'sender'
@@ -29,9 +33,8 @@ class User(db.Model, UserMixin):
         foreign_keys = 'FriendRequest.sent_to_id',
         backref = 'receiver'
     )
-    @property
-    def friends(self):
-        return self.friends_accepted + self.friends_invited
+    letter_lines = db.relationship('LetterLine', backref='author', lazy=True)
+
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -105,7 +108,7 @@ class FriendRequest(db.Model):
 class LetterLine(db.Model):
     __tablename__ = 'letter_line'
     line_id = db.Column(db.Integer(), primary_key=True)
-    letter_id = db.Column(db.Integer(), db.ForeignKey('letter.id', ondelete='CASCADE'))
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     line_content = db.Column(db.Text, nullable=False)
     taken = db.Column(db.Boolean, nullable=False, default=False)
 

@@ -1,16 +1,31 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% if is_friend and letter %}
-        <article class="media content-section">
-            <div class="media-body">
-                <h2 class="article-title">{{ letter.title }}</h2>
-                <p class="article-content">{{ letter.content }}</p>
-                <div class="article-metadata">
-                    <small class="text-muted">Ostatnia aktualizacja {{ letter.date_posted.strftime('%d.%m.%Y') }}</small>
-                </div>
-            </div>            
-        </article>        
-    {% elif is_friend and not letter %}
+    {% if is_friend and lines %}
+        {% if lines %}   
+            <table class="table">
+                <tr>
+                    <th>Opis</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            {% for line in lines %}
+                <tr>
+                    <td>{{ line.line_content }}</td>
+                    {% if line.taken == True %}
+                        <td>Zajęte</td>
+                    {% else %}
+                        <td>
+                            Dwa przyciski tutaj
+                        </td>        
+                    {% endif %}
+                    <td>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="/">Zarezerwuj</a>
+                    </td>              
+                </tr>
+            {% endfor %}
+            </table>
+        {% endif %}      
+    {% elif is_friend and not lines %}
     <article class="media content-section">
         <div class="media-body">
             <h2 class="article-title">

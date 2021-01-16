@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if lines %}   
+        <table class="table">
+            <tr>
+                <th>Opis</th>
+                <th></th>
+            </tr>
+        {% for line in lines %}
+            <tr>
+                <td>{{ line.line_content }}</td>
+                <td >
+                    <a class="btn btn-danger btn-sm" href="/">Usuń</a>
+                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="/">Edytuj</a>
+                </td>              
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+    <div>
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="{{ url_for('letters.new_letter_line') }}">Dodaj przedmiot do listy</a>
+    </div>
+{% endblock content %}
