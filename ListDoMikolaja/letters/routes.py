@@ -16,7 +16,7 @@ def friends_letter():
         letter_lines = LetterLine.query.filter_by(user_id=user_id).all()
     else:
         flash('Nieznany użytkownik.', 'danger')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('friends.home'))
 
     if int(user_id) in {x.id for x in current_user.friends}:
         is_friend = True
@@ -58,7 +58,7 @@ def take_letter_line():
         return redirect(url_for('letters.friends_letter', user_id=letter_line.author.id))
     else:
         flash('Musisz być znajomym użytkownika żeby zarezerwować przedmiot na jego liście.', 'danger')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('friends.home'))
 
 @letters.route("/letter/delete_letter_line", methods=['GET', 'POST'])
 @login_required
