@@ -8,7 +8,13 @@ from ListDoMikolaja.models import FriendRequest, User, Friends
 
 friends = Blueprint('friends', __name__)
 
-@friends.route("/", methods=['GET', 'POST'])
+@friends.route("/")
+@friends.route("/home")
+@login_required
+def home():
+    return render_template('home.html')
+
+
 @friends.route("/friends/request", methods=['GET', 'POST'])
 @login_required
 def new_friend_request():
