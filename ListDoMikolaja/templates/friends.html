@@ -7,9 +7,9 @@
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + friend.image_file) }}">
             <div class="media-body">
-                <a class="mr-2" href="{{ url_for('letters.friends_letter',  user_id=friend.id) }}">{{ friend.username }}</p>
-                <p class="mr-2">{{ friend.name }} {{ friend.surname }}</p>
-        </div>
+                <a class="mt-10 mr-2" href="{{ url_for('letters.friends_letter',  user_id=friend.id) }}">{{ friend.username }}</a>
+                <p class="mt-2 mr-2 ">{{ friend.name }} {{ friend.surname }}</p>
+            </div>
         </article>
     {% endfor %}
 {% endblock content %}

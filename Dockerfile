@@ -13,7 +13,7 @@ COPY Pipfile Pipfile.lock .env run.py ${PROJECT_DIR}/
 WORKDIR ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
 
-COPY LetterToSanta ${PROJECT_DIR}/LetterToSanta
+COPY ListDoMikolaja ${PROJECT_DIR}/LetterToSanta
 RUN nginx && nginx -s reload
 
 ENTRYPOINT gunicorn -w 3 run:app
