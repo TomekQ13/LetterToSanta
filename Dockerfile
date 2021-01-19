@@ -6,14 +6,14 @@ RUN rm /etc/nginx/sites-enabled/default
 COPY blog_nginx /etc/nginx/sites-enabled/
 COPY proxy_params /etc/nginx/
 
-ENV PROJECT_DIR /blog
+ENV PROJECT_DIR /LetterToSanta
 ENV FLASK_APP run.py
 ENV FLASK_DEBUG 1
 COPY Pipfile Pipfile.lock .env run.py ${PROJECT_DIR}/
 WORKDIR ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
 
-COPY blog ${PROJECT_DIR}/blog
+COPY LetterToSanta ${PROJECT_DIR}/LetterToSanta
 RUN nginx && nginx -s reload
 
 ENTRYPOINT gunicorn -w 3 run:app
