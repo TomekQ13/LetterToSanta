@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y nginx
 RUN rm /etc/nginx/sites-enabled/default
 COPY blog_nginx /etc/nginx/sites-enabled/
 COPY proxy_params /etc/nginx/
-RUN nginx -s reload
+RUN nginx && nginx -s reload
 
 ENV PROJECT_DIR /blog
 ENV FLASK_APP run.py
