@@ -1,4 +1,3 @@
-from sys import stderr
 from flask import Blueprint, flash, render_template, redirect, url_for, abort, request
 from flask_login import current_user, login_required
 from sqlalchemy.sql.elements import True_
@@ -7,45 +6,6 @@ from ListDoMikolaja.letters.forms import LetterForm, LetterLineForm
 from ListDoMikolaja.models import Letter, LetterLine, User
 
 letters = Blueprint('letters', __name__)
-
-@letters.route("/letter")
-@login_required
-def letter():
-    letter = Letter.query.filter_by(user_id = current_user.id).first()
-    return render_template('letter.html', title='Mój list', letter=letter)
-
-@letters.route("/letter/new", methods=['GET', 'POST'])
-@login_required
-def new_letter():
-    #if user already has a letter
-    existing_letter = Letter.query.filter_by(user_id = current_user.id).first()
-    if existing_letter:
-        flash('Już napisałeś list. Zaktualizuj go lub usuń jeżeli chcesz zacząć od nowa.', 'warning')
-        return redirect(url_for('letters.letter'))
-
-    form = LetterForm()
-    if form.validate_on_submit():
-        letter = Letter(content = form.content.data, user_id = current_user.id)
-        db.session.add(letter)
-        db.session.commit()
-        flash('List został dodany pomyślnie!', 'success')
-        return redirect(url_for('letters.letter'))
-
-    letter = Letter.query.filter_by(user_id = current_user.id).first()
-    return render_template('new_letter.html', form=form, letter=letter, legend='Napisz list!')
-
-@letters.route("/letter/delete", methods=['POST'])
-@login_required
-def delete_letter():
-    letter = Letter.query.filter_by(user_id=current_user.id).first()
-    #if current_user is not an author and current user is not an admin
-    if letter.author != current_user and 'Admin' not in current_user.roles_names:
-        abort(403)
-
-    db.session.delete(letter)
-    db.session.commit()
-    flash('List został usunięty.', 'success')
-    return redirect(url_for('letters.letter'))
 
 @letters.route("/letter/friends_letter", methods=['GET'])
 @login_required
@@ -83,4 +43,34 @@ def new_letter_line():
         flash('Przedmiot został dodany do listu.', 'success')
         return redirect(url_for('letters.letter_lines'))
         
-    return render_template('new_letter_line.html', form=form, line = existing_lines, legend='Napisz list!')
+    return render_template('new_letter_line.html', form=form, line = existing_lines, legend='Dodaj przedmiot do listy!')
+
+@letters.route("/letter/accept")
+@login_required
+def take_letter_line():
+    letter_line_id = request.args.get('letter_line_id')
+    letter_line = LetterLine.query.get_or_404(letter_line_id)
+    if current_user.id in [x.id for x in letter_line.author.friends]:
+        letter_line.taken = True
+        letter_line.taken_user_id = current_user.id
+        db.session.commit()
+        flash('Przedmiot został zarezerwowany.', 'success')
+        return redirect(url_for('letters.friends_letter', user_id=letter_line.author.id))
+    else:
+        flash('Musisz być znajomym użytkownika żeby zarezerwować przedmiot na jego liście.', 'danger')
+        return redirect(url_for('main.home'))
+
+@letters.route("/letter/delete_letter_line", methods=['GET', 'POST'])
+@login_required
+def delete_letter_line():
+    letter_line_id = request.args.get('letter_line_id')
+    letter_line = LetterLine.query.get_or_404(letter_line_id)
+    if current_user.id == letter_line.user_id:
+        db.session.delete(letter_line)
+        db.session.commit()
+        flash('Przedmiot został usunięty z listy.', 'success')
+    else:
+        abort(403)
+
+    return redirect(url_for('letters.letter_lines'))
+        

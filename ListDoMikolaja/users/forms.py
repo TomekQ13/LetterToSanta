@@ -26,42 +26,44 @@ class RegistrationForm(FlaskForm):
                 raise ValidationError('A user with this email already exists. Please choose a different one.')
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField('Remember Me')
-    submit = SubmitField('Log In')
+    username = StringField('Nazwa użytkownika', validators=[DataRequired()])
+    password = PasswordField('Hasło', validators=[DataRequired()])
+    remember = BooleanField('Zapamiętaj mnie')
+    submit = SubmitField('Zaloguj się')
 
 class UpdateAccountForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    username = StringField('Nazwa użytkownika', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    picture = FileField('Update profile picture', validators=[FileAllowed(['jpg', 'png'])])
-    submit = SubmitField('Update')
+    name = StringField('Imię')
+    surname = StringField('Nazwisko')
+    picture = FileField('Zaktualizuj zdjęcie profilowe', validators=[FileAllowed(['jpg', 'png'])])
+    submit = SubmitField('Zaktualizuj')
     
 
     def validate_username(self, username):
         if username.data != current_user.username:
             user = User.query.filter_by(username=username.data).first()
             if user:
-                raise ValidationError('A user with this name already exists. Please choose a different one.')
+                raise ValidationError('Użytkownik z taką nazwą użytkownika już istnieje. Wybierz inną.')
 
     def validate_email(self, email):
         if email.data != current_user.email:
             email = User.query.filter_by(email=email.data).first()
             if email:
-                raise ValidationError('A user with this email already exists. Please choose a different one.')
+                raise ValidationError('Użytkownik z takim adresem email już istnieje. Wybierz inny.')
 
 
 class RequestResetForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Request password reset')
+    submit = SubmitField('Resetuj hasło')
 
     def validate_email(self, email):
         email = User.query.filter_by(email=email.data).first()
         if email is None:
-            raise ValidationError('There is not account with this email. You must register first.')
+            raise ValidationError('Nie istnieje konto przypisane do tego adresu email.')
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Reset password')
+    password = PasswordField('Hasło', validators=[DataRequired()])
+    confirm_password = PasswordField('Potwierdź hasło', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Zresetuj hasło')
 

@@ -11,16 +11,17 @@
             {% for line in lines %}
                 <tr>
                     <td>{{ line.line_content }}</td>
-                    {% if line.taken == True %}
-                        <td>Zajęte</td>
+                    {% if line.taken == False %}
+                        <td>
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                            href="{{ url_for('letters.take_letter_line', letter_line_id=line.line_id) }}">
+                            Zarezerwuj</a>
+                        </td>  
                     {% else %}
                         <td>
-                            Dwa przyciski tutaj
+                            Zarezerwowane przez: {{ line.line_taker.identifier }}
                         </td>        
-                    {% endif %}
-                    <td>
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="/">Zarezerwuj</a>
-                    </td>              
+                    {% endif %}            
                 </tr>
             {% endfor %}
             </table>
@@ -39,7 +40,6 @@
             <h2 class="article-title">
                 Ten użytkownik nie jest Twoim znajomym. <br>
                 Dodaj go do znajomych żeby widzieć jego list.
-                {{ is_friend }} {{ letter }} {{ friend_id }}
             </h2>
         </div>            
     </article>    

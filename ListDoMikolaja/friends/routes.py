@@ -19,6 +19,11 @@ def new_friend_request():
             flash('Taki użytkownik nie istnieje.', 'danger')
             return render_template('send_friend_request.html', form=form)
 
+        #if user tries to send a request to themselves
+        if form.username == current_user.username:
+            flash('Nie możesz zaprosić samego siebie :)', 'danger')
+            return render_template('send_friend_request.html', form=form)
+
         #if users are friends already
         if form.username.data in {x.username for x in current_user.friends}:
             flash('Ten użytkownik już jest Twoim znajomym', 'info')

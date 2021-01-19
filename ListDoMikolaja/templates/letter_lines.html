@@ -10,8 +10,7 @@
             <tr>
                 <td>{{ line.line_content }}</td>
                 <td >
-                    <a class="btn btn-danger btn-sm" href="/">Usuń</a>
-                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="/">Edytuj</a>
+                    <a class="btn btn-danger btn-sm" href="{{ url_for('letters.delete_letter_line', letter_line_id = line.line_id) }}">Usuń</a>
                 </td>              
             </tr>
         {% endfor %}

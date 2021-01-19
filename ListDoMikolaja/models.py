@@ -35,6 +35,17 @@ class User(db.Model, UserMixin):
     )
     letter_lines = db.relationship('LetterLine', backref='author', lazy=True)
 
+    @property
+    def taken_lines(self):
+        query = LetterLine.query.filter(LetterLine.taken_user_id == self.id).first()
+        return query
+
+    @property
+    def identifier(self):
+        if self.name and self.surname:
+            return self.name + ' ' + self.surname
+        else:
+            return self.username
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -111,4 +122,16 @@ class LetterLine(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
     line_content = db.Column(db.Text, nullable=False)
     taken = db.Column(db.Boolean, nullable=False, default=False)
+    taken_user_id = db.Column(db.Integer())
+
+    def __repr__(self):
+        return f"LetterLine('{self.line_id}', '{self.user_id}', '{self.line_content}', '{self.taken}', '{self.taken_user_id}')"
+
+    @property
+    def line_taker(self):
+        """
+        Returns the taker of the letter line. None if doesn't exist.
+        """
+        query = User.query.filter(User.id == self.taken_user_id).first()
+        return query
 

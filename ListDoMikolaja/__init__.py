@@ -26,12 +26,10 @@ def create_app(config_class=Config):
 
     from ListDoMikolaja.users.routes import users
     from ListDoMikolaja.letters.routes import letters
-    from ListDoMikolaja.main.routes import main
     from ListDoMikolaja.friends.routes import friends
     from ListDoMikolaja.errors.handlers import errors
     app.register_blueprint(users)
     app.register_blueprint(letters)
-    app.register_blueprint(main)
     app.register_blueprint(errors)
     app.register_blueprint(friends)
 

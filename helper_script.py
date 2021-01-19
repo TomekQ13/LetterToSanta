@@ -46,6 +46,13 @@ db.session.commit()
 
 letter_line1=LetterLine(user_id=1, line_content='asdasdavsdv')
 db.session.add(letter_line1)
-letter_line2=LetterLine(user_id=1, line_content='sssdsdsddsdsds', taken=1)
+letter_line2=LetterLine(
+    user_id=1,
+    line_content='sssdsdsddsdsds',
+    taken=1,
+    taken_user_id=1
+)
 db.session.add(letter_line2)
 db.session.commit()
+
+lt = LetterLine.query.get(2)

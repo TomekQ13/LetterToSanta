@@ -75,6 +75,8 @@ def account():
 
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.name = form.name.data
+        current_user.surname = form.surname.data
         db.session.commit()
         flash('Your account has been updated.', 'success')
 
@@ -83,6 +85,8 @@ def account():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.name.data = current_user.name
+        form.surname.data = current_user.surname
 
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title = 'Account', image_file=image_file, form=form)
