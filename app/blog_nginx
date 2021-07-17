@@ -7,7 +7,7 @@ server {
         }
 
         location / {
-                proxy_pass http://localhost:5000;
+                proxy_pass http://localhost:8000;
                 include /etc/nginx/proxy_params;
                 proxy_redirect off;
         }
