@@ -1,5 +1,5 @@
 server {
-        listen 80;
+        listen 5000;
         server_name 139.162.132.233;
 
         location /static {
@@ -7,7 +7,7 @@ server {
         }
 
         location / {
-                proxy_pass http://localhost:8000;
+                proxy_pass http://localhost:5000;
                 include /etc/nginx/proxy_params;
                 proxy_redirect off;
         }
