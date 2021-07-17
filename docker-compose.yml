@@ -20,4 +20,4 @@ services:
         depends_on: 
              - 'postgres'
         environment: 
-              - DATABASE_URI=${POSTGRES_PASSWORD}
+              - DATABASE_URI=${DATABASE_URI}

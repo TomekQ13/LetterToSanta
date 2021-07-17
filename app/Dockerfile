@@ -10,7 +10,7 @@ RUN nginx && nginx -s reload
 ENV PROJECT_DIR /ListDoMikolaja
 ENV FLASK_APP run.py
 ENV FLASK_DEBUG 1
-COPY Pipfile Pipfile.lock .env run.py ${PROJECT_DIR}/
+COPY Pipfile Pipfile.lock run.py ${PROJECT_DIR}/
 WORKDIR ${PROJECT_DIR}/
 RUN pipenv install --system --deploy
 COPY ListDoMikolaja ${PROJECT_DIR}/ListDoMikolaja
