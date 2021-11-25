@@ -17,8 +17,9 @@
     {% endif %}
 </head>
 <body>
-    <div class="container">
+
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                     </button>
@@ -42,9 +43,10 @@
                             <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Zarejestruj się</a>
                         </div>
                     {% endif %}                
-                </div>        
+                </div>  
+            </div>      
         </nav>
-    </div>
+
     <main role="main" class="container">
         <div class="row">
           <div class="col">
