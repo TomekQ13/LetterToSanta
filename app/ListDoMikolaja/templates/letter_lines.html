@@ -1,15 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
+<div class="container">
     {% if lines %}   
         <table class="table">
             <tr>
+                <th class="id-col">Numer</th>
                 <th>Opis</th>
-                <th></th>
+                <th class="id-col"></th>
             </tr>
         {% for line in lines %}
             <tr>
+                <td>{{ loop.index }}</td>
                 <td>{{ line.line_content }}</td>
-                <td >
+                <td class="id-col">
                     <a class="btn btn-danger btn-sm" href="{{ url_for('letters.delete_letter_line', letter_line_id = line.line_id) }}">Usuń</a>
                 </td>              
             </tr>
@@ -19,4 +22,5 @@
     <div>
         <a class="btn btn-primary btn-lg btn-block mb-3" href="{{ url_for('letters.new_letter_line') }}">Dodaj przedmiot do listy</a>
     </div>
+</div>
 {% endblock content %}

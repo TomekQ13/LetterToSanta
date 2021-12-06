@@ -151,3 +151,7 @@ body {
     background-color: #000000;
     border-color: #000000;
   }
+
+  .id-col {
+      max-width: 1rem;
+  }

@@ -4,12 +4,14 @@
         {% if lines %}   
             <table class="table">
                 <tr>
+                    <th class="id-col">Numer</th>
                     <th>Opis</th>
                     <th>Status</th>
-                    <th></th>
+                    <th class="id-col"></th>
                 </tr>
             {% for line in lines %}
                 <tr>
+                    <td>{{ loop.index }}</td>
                     <td>{{ line.line_content }}</td>
                     {% if line.taken == False %}
                         <td>
