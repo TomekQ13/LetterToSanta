@@ -10,8 +10,8 @@
             </tr>
         {% for line in lines %}
             <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ line.line_content }}</td>
+                <td class="id-col">{{ loop.index }}</td>
+                <td class="line-item-desc">{{ line.line_content }}</td>
                 <td class="id-col">
                     <a class="btn btn-danger btn-sm" href="{{ url_for('letters.delete_letter_line', letter_line_id = line.line_id) }}">Usuń</a>
                 </td>              

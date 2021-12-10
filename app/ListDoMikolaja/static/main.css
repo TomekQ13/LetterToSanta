@@ -153,5 +153,9 @@ body {
   }
 
   .id-col {
-      max-width: 1rem;
+      width: 1rem;
+  }
+
+  .line-item-desc {
+      word-break: break-word;
   }
