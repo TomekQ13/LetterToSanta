@@ -97,4 +97,7 @@ def request_accept(request_id):
     flash('Zaproszenie zostało zaakceptowane', 'success')
     return redirect(url_for('friends.friends_request_list'))
 
+@friends.route('/friends/reserved_items')
+def reserved_items():
+    return render_template('reserved_items.html', reserved_items = current_user.taken_lines)
 

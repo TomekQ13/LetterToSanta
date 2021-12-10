@@ -37,8 +37,8 @@ class User(db.Model, UserMixin):
 
     @property
     def taken_lines(self):
-        query = LetterLine.query.filter(LetterLine.taken_user_id == self.id).first()
-        return query
+        results = LetterLine.query.filter(LetterLine.taken_user_id == self.id).all()
+        return [{'line': result, 'taker': result.author} for result in results]
 
     @property
     def identifier(self):
