@@ -5,14 +5,14 @@
             <table class="table">
                 <tr>
                     <th class="id-col">Numer</th>
-                    <th>Opis</th>
+                    <th class="line-item-desc">Opis</th>
                     <th>Status</th>
                     <th class="id-col"></th>
                 </tr>
             {% for line in lines %}
                 <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ line.line_content }}</td>
+                    <td class="id-col">{{ loop.index }}</td>
+                    <td class="line-item-desc">{{ line.line_content }}</td>
                     {% if line.taken == False %}
                         <td>
                             <a class="btn btn-secondary btn-sm mt-1 mb-1"
