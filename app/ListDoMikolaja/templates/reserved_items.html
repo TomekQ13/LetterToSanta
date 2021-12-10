@@ -4,14 +4,14 @@
         <table class="table">
             <tr>
                 <th class="id-col">Numer</th>
-                <th class="line-item-desc">Użytkownik</th>
+                <th class="">Użytkownik</th>
                 <th>Opis</th>
             </tr>
         {% for line in reserved_items %}
             <tr>
                 <td class="id-col">{{ loop.index }}</td>
-                <td class="line-item-desc">{{ line.taker.username }}</td>
-                <td>{{ line.line.line_content }}</td>          
+                <td>{{ line.taker.username }}</td>
+                <td class="line-item-desc">{{ line.line.line_content }}</td>          
             </tr>
         {% endfor %}
         </table>
