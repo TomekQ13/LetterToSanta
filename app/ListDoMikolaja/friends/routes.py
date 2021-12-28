@@ -27,7 +27,7 @@ def new_friend_request():
             return render_template('send_friend_request.html', form=form)
 
         #if user tries to send a request to themselves
-        if form.username == current_user.username:
+        if form.username.data == current_user.username:
             flash('Nie możesz zaprosić samego siebie :)', 'danger')
             return render_template('send_friend_request.html', form=form)
 
